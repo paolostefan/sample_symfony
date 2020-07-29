@@ -9,3 +9,6 @@ RUN apt-get update && apt-get install -y wget zlib1g-dev libicu-dev libpq-dev g+
 COPY install-composer.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-composer.sh && /usr/local/bin/install-composer.sh
+
+RUN addgroup --gid 1000 developer && \
+    useradd --uid 1000 --gid 1000 developer
