@@ -14,6 +14,3 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-# Ignora i vendor per non ingolfare il repository
-vendor/

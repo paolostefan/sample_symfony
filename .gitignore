@@ -1,3 +1,4 @@
-# La directory .vagrant/machines/default/virtualbox 
-# contiene informazioni legate alla macchina, fra cui una chiave privata
 .vagrant/
+/guybrush/var/cache
+/guybrush/var/log
+/guybrush/vendor
