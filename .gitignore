@@ -1,2 +1,4 @@
 .vagrant/
-/guybrush
+/guybrush/var/cache
+/guybrush/var/log
+/guybrush/vendor
