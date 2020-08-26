@@ -6,11 +6,15 @@ RUN apt-get update && apt-get install -y wget zlib1g-dev libicu-dev libpq-dev li
   && docker-php-ext-configure zip \
   && docker-php-ext-install intl pdo pdo_pgsql pgsql zip
 
-# Composer stuff
-COPY install-composer.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-composer.sh && /usr/local/bin/install-composer.sh
+RUN rm -rf /var/cache/apt/*
+
+# Composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Unprivileged user
-RUN addgroup --gid 1000 developer && \
-    adduser --home /home/developer --shell /bin/bash --uid 1000 \
-    --gid 1000 developer --disabled-login
+RUN groupadd --gid 1000 developer && \
+    useradd -d /home/developer -ms /bin/bash -u 1000 -g 1000 developer
+
+# Symfony project dirs
+RUN mkdir -p /var/www/html/guybrush/var/cache /var/www/html/guybrush/var/log
+RUN chown -R developer: /var/www/html/guybrush/

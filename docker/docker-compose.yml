@@ -5,12 +5,21 @@ services:
     build:
       context: ./php-fpm
     container_name: php_fpm
+    depends_on:
+      - postgres
     ports:
       - 9000:9000
     volumes:
       - ../guybrush:/var/www/html/guybrush
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       # - ./php-fpm/etc/php.ini:/usr/local/etc/php/php.ini
+
+  # composer:
+  #   image: composer:latest
+  #   command: install
+  #   volumes:
+  #     - ../guybrush:/app:delegated
+  #     - guybrush_var:/var/www/html/guybrush/var
 
   nginx:
     build:
