@@ -1,10 +1,17 @@
 FROM php:7.4-fpm-buster
 
+ENV PHP_EXTENSIONS \
+    intl \
+    pdo \
+    pdo_pgsql \
+    pgsql \
+    zip
+
 RUN apt-get update && apt-get install -y wget zlib1g-dev libicu-dev libpq-dev libzip-dev g++ unzip \
   && docker-php-ext-configure intl \
   && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
   && docker-php-ext-configure zip \
-  && docker-php-ext-install intl pdo pdo_pgsql pgsql zip
+  && docker-php-ext-install ${PHP_EXTENSIONS}
 
 RUN rm -rf /var/cache/apt/*
 
@@ -12,9 +19,7 @@ RUN rm -rf /var/cache/apt/*
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Unprivileged user
-RUN groupadd --gid 1000 developer && \
-    useradd -d /home/developer -ms /bin/bash -u 1000 -g 1000 developer
+RUN groupadd --gid 1000 developer && useradd -d /home/developer -ms /bin/bash -u 1000 -g 1000 developer
 
 # Symfony project dirs
-RUN mkdir -p /var/www/html/guybrush/var/cache /var/www/html/guybrush/var/log
-RUN chown -R developer: /var/www/html/guybrush/
+RUN mkdir -p /var/www/html/guybrush/ && chown -R developer: /var/www/html/guybrush/
