@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 services:
 
   php:
@@ -7,19 +7,17 @@ services:
     container_name: php_fpm
     depends_on:
       - postgres
-    ports:
-      - 9000:9000
+    # ports:
+    #   - 9000:9000
     volumes:
-      - ../guybrush:/var/www/html/guybrush
+      - type: bind
+        source: ../guybrush
+        target: /var/www/html/guybrush
+        consistency: cached
+        read_only: true
+      - guybrush_var:/var/www/html/guybrush/var
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       # - ./php-fpm/etc/php.ini:/usr/local/etc/php/php.ini
-
-  # composer:
-  #   image: composer:latest
-  #   command: install
-  #   volumes:
-  #     - ../guybrush:/app:delegated
-  #     - guybrush_var:/var/www/html/guybrush/var
 
   nginx:
     build:
@@ -30,14 +28,17 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ../guybrush:/usr/share/nginx/html/guybrush
+      - type: bind
+        source: ../guybrush
+        target: /usr/share/nginx/html/guybrush
+        consistency: cached
+        read_only: true
+      - guybrush_var:/usr/share/nginx/html/guybrush/var
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
   postgres:
     image: postgis/postgis
     container_name: postgres
-    depends_on: 
-      - php
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -46,4 +47,5 @@ services:
       POSTGRES_PASSWORD: Pa55w0rD
 
 volumes:
+  guybrush_var:
   pgdata:
