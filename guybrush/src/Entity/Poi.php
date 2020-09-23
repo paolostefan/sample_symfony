@@ -28,7 +28,7 @@ class Poi
     private $description;
 
     /**
-     * @ORM\Column(type="geography")
+     * @ORM\Column(type="geography", options={"geometry_type"="POINT"})
      */
     private $coords;
 
