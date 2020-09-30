@@ -100,9 +100,9 @@ class PoiImportCommand extends Command
                 $csvRow = fgetcsv($file);
                 list($lat, $lon, $title) = $csvRow;
                 $poi = new Poi();
-                // POINT({LON} {LAT})
+                // SRID=4326;POINT({LON} {LAT})
                 $poi
-                  ->setCoords(sprintf('POINT(%f %f)', floatval($lon), floatval($lat)))
+                  ->setCoords(sprintf('SRID=4326;POINT(%f %f)', floatval($lon), floatval($lat)))
                   ->setTitle($title)
                   ->setCategory($chosenCategory);
 

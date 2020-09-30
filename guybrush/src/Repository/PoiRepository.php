@@ -19,6 +19,22 @@ class PoiRepository extends ServiceEntityRepository
         parent::__construct($registry, Poi::class);
     }
 
+    /**
+     * @param int $limit Numero massimo di record da restituire
+     * @return Poi[] Poi objects
+     */
+    public function findByNullAddress($limit = 10)
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $qb->andWhere($qb->expr()->isNull('p.address'));
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Poi[] Returns an array of Poi objects
     //  */
@@ -47,4 +63,5 @@ class PoiRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

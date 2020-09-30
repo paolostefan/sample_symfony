@@ -67,6 +67,22 @@ class Poi
      */
     private $category;
 
+    /**
+     * @var int SRID usato per le coordinate ($coords)
+     */
+    private ?int $srid;
+
+    /**
+     * @var float longitudine di $coords
+     */
+    private ?float $lon;
+
+    /**
+     * @var float latitudine di $coords
+     */
+    private ?float $lat;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,5 +206,40 @@ class Poi
         $this->category = $category;
 
         return $this;
+    }
+
+    /**
+     * Popola i campi srid, lat e lon a partire dalle coordinate lette da db,
+     * che sono una stringa del tipo 'SRID=4326;POINT(0.0 0.0)'
+     */
+    private function parseCoords(){
+        sscanf($this->coords,"SRID=%d;POINT(%f %f)", $this->srid, $this->lon, $this->lat);
+    }
+
+    /**
+     * @return float
+     */
+    public function getLon(): float
+    {
+        $this->parseCoords();
+        return $this->lon;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLat(): float
+    {
+        $this->parseCoords();
+        return $this->lat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSrid(): int
+    {
+        $this->parseCoords();
+        return $this->srid;
     }
 }
