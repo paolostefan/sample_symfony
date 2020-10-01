@@ -18,7 +18,7 @@ class PoiEnrichCommand extends Command
     protected static $defaultName = 'poi:enrich';
 
     private $em;
-    private $apiKey = '<la tua API key>';
+    private $apiKey = '9c7AtTpwOu09e0U1rkm1k2gqs72J1vLp';
     private $baseUrl = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
 
     public function __construct(EntityManagerInterface $em, string $name = null)
@@ -30,7 +30,7 @@ class PoiEnrichCommand extends Command
     protected function configure()
     {
         $this
-          ->setDescription('Reverse-geocode POIs missing address info.')
+          ->setDescription('Reverse-geocode the POIs missing their address.')
           ->addOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Maximum no. of POIs to enrich')
           ->addOption('info', 'i', InputOption::VALUE_NONE, 'Just print the number of POI to enrich, and exit.')
           ->addOption('stoponerror', 's', InputOption::VALUE_NONE, 'Stop at first error')
@@ -40,35 +40,37 @@ class PoiEnrichCommand extends Command
     private function mapQuestGeocode(Poi $p)
     {
         $url = sprintf($this->baseUrl, $this->apiKey, $p->getLat(), $p->getLon());
-//        $res = curl_init($url);
-//        curl_setopt($res, CURLOPT_RETURNTRANSFER, true);
-//        $output = json_decode(curl_exec($res), JSON_OBJECT_AS_ARRAY);
-//        curl_close($res);
+        $res = curl_init($url);
+        curl_setopt($res, CURLOPT_RETURNTRANSFER, true);
+        $output = json_decode(curl_exec($res), JSON_OBJECT_AS_ARRAY);
+        curl_close($res);
 
-//        return $output;
+        return $output;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $limit = $initialLimit = $input->getOption('limit');
+        $limit = $input->getOption('limit');
         $stoponerror = $input->getOption('stoponerror');
         $force = $input->getOption('force');
 
         if ($input->getOption('info')) {
-            $limit = 0;
-        } else  if ($limit <= 0) {
-            $io->writeln('<info>Automatically limiting the number of records to '.self::DEFAULT_LIMIT.'</info>');
-            $limit = $initialLimit = self::DEFAULT_LIMIT;
+            $limit = null;
+        } else {
+            if ($limit <= 0) {
+                $io->writeln('<info>Automatically limiting the number of records to '.self::DEFAULT_LIMIT.'</info>');
+                $limit = self::DEFAULT_LIMIT;
+            }
         }
 
-        $poi = $this->em->getRepository(Poi::class)->findByNullAddress($limit);
+        $poi = $this->em->getRepository(Poi::class)->findBy(['address' => null], ['updatedAt' => 'ASC'], $limit);
 
         if ($input->getOption('info')) {
             $io->writeln('Total number of POIs to enrich: <info>'.count($poi).'</info>');
+
             return Command::SUCCESS;
         }
-
 
         // Create progressbar
         $pbar = new ProgressBar($output, count($poi));
@@ -77,18 +79,30 @@ class PoiEnrichCommand extends Command
 
         /** @var Poi $p */
         foreach ($poi as $p) {
+
+            $processed++;
+
             $output = $this->mapQuestGeocode($p);
 
-            $io->writeln(print_r($output, true), OutputInterface::VERBOSITY_VERY_VERBOSE);
+//            $io->writeln(print_r($output, true), OutputInterface::VERBOSITY_VERY_VERBOSE);
 
             if (empty($output['results'][0]['locations'][0])) {
-                $io->writeln('<error>No results</error> for POI #'.$p->getId()." (".$p->getCoords().")");
-                $io->writeln('Returned object is:', OutputInterface::VERBOSITY_VERBOSE);
+                $pbar->clear();
+                $io->writeln('<error>No results</error> for POI #'.$p->getId()." (".$p->getTitle().")");
+                $io->writeln(
+                  'API returned '.($output ? print_r($output, true) : 'null'),
+                  OutputInterface::VERBOSITY_VERBOSE
+                );
                 if ($stoponerror) {
                     return Command::FAILURE;
                 }
+
+                $pbar->display();
+                $pbar->advance();
                 continue;
             }
+
+            $pbar->advance();
 
             /**
              * https://developer.mapquest.com/documentation/geocoding-api/reverse/get/
@@ -107,8 +121,6 @@ class PoiEnrichCommand extends Command
                     $this->em->flush();
                 }
             }
-            $pbar->advance();
-            $processed++;
         }
 
         $this->em->flush();

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\PoiRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -66,7 +67,11 @@ class Poi
      * @ORM\ManyToOne(targetEntity=PoiCategory::class, inversedBy="points")
      */
     private $category;
-
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
     /**
      * @var int SRID usato per le coordinate ($coords)
      */
@@ -204,6 +209,17 @@ class Poi
     public function setCategory(?PoiCategory $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
