@@ -6,7 +6,6 @@ use App\Entity\Poi;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +17,7 @@ class PoiEnrichCommand extends Command
     protected static $defaultName = 'poi:enrich';
 
     private $em;
-    private $apiKey = '9c7AtTpwOu09e0U1rkm1k2gqs72J1vLp';
+    private $apiKey = '{la vostra API key}';
     private $baseUrl = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
 
     public function __construct(EntityManagerInterface $em, string $name = null)
