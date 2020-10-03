@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Poi;
+use App\Service\Geocode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -17,14 +18,15 @@ class PoiEnrichCommand extends Command
     const DEFAULT_LIMIT = 10;
     protected static $defaultName = 'poi:enrich';
 
-    private $em;
-    private $apiKey = '9c7AtTpwOu09e0U1rkm1k2gqs72J1vLp';
-    private $baseUrl = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
+    private EntityManagerInterface $em;
+    private Geocode $geocode;
 
-    public function __construct(EntityManagerInterface $em, string $name = null)
+
+    public function __construct(EntityManagerInterface $em, Geocode $geocode, string $name = null)
     {
         parent::__construct($name);
         $this->em = $em;
+        $this->geocode = $geocode;
     }
 
     protected function configure()
@@ -37,16 +39,6 @@ class PoiEnrichCommand extends Command
           ->addOption('force', 'f', InputOption::VALUE_NONE, 'Actually write data to DB');
     }
 
-    private function mapQuestGeocode(Poi $p)
-    {
-        $url = sprintf($this->baseUrl, $this->apiKey, $p->getLat(), $p->getLon());
-        $res = curl_init($url);
-        curl_setopt($res, CURLOPT_RETURNTRANSFER, true);
-        $output = json_decode(curl_exec($res), JSON_OBJECT_AS_ARRAY);
-        curl_close($res);
-
-        return $output;
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -82,7 +74,7 @@ class PoiEnrichCommand extends Command
 
             $processed++;
 
-            $output = $this->mapQuestGeocode($p);
+            $output = $this->geocode->callWebservice($p);
 
 //            $io->writeln(print_r($output, true), OutputInterface::VERBOSITY_VERY_VERBOSE);
 

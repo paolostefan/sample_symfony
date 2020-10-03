@@ -29,6 +29,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\Geocode:
+        public: true
+        arguments:
+            $apiKey: '%env(MAPQUEST_API_KEY)%'
+            $urlTemplate: '%env(MAPQUEST_URL_TEMPLATE)%'
 
     # Guybrush::PostGIS config
     Jsor\Doctrine\PostGIS\Event\ORMSchemaEventSubscriber:

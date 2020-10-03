@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use App\Entity\Poi;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,7 +22,7 @@ class PoiImportCommand extends Command
 
     const RECORD_BLOCK_SIZE = 210;
 
-    public function __construct(\Doctrine\ORM\EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em)
     {
         parent::__construct();
         $this->em = $em;
@@ -114,7 +116,7 @@ class PoiImportCommand extends Command
                 }
 
                 $pbar->advance();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $pbar->clear();
                 $io->warning("Error at row ".$row.": ".$e->getMessage());
                 $retval = Command::FAILURE;
