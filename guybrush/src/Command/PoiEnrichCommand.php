@@ -116,7 +116,6 @@ class PoiEnrichCommand extends Command
                   ->setProvince($result['adminArea3'] ?? '-')
                   ->setRegion($result['adminArea3'] ?? '-')
                   ->setZip($result['postalCode']);
-                $this->em->persist($p);
                 if (!$processed % 50) {
                     $this->em->flush();
                 }
