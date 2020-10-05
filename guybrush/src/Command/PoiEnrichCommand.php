@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PoiEnrichCommand extends Command
 {
     const DEFAULT_LIMIT = 10;
-    const API_KEY = '{la vostra API key}';
+    const API_KEY = 'la_vostra_chiave_API';
     const TPL_URL = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
 
     protected static $defaultName = 'poi:enrich';
