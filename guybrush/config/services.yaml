@@ -37,5 +37,5 @@ services:
         public: true
         arguments:
             $apiKey: '%env(MAPQUEST_API_KEY)%'
-            $urlTemplate: '%env(MAPQUEST_URL_TEMPLATE)%'
+            $urlTemplate: 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%%s&location=%%f,%%f'
 
