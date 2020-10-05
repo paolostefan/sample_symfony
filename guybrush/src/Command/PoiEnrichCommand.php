@@ -58,7 +58,7 @@ class PoiEnrichCommand extends Command
             $limit = null;
         } else {
             if ($limit <= 0) {
-                $io->writeln('<info>Automatically limiting the number of records to '.self::DEFAULT_LIMIT.'</info>');
+                $io->comment('Automatically limiting the number of records to '.self::DEFAULT_LIMIT);
                 $limit = self::DEFAULT_LIMIT;
             }
         }
@@ -74,7 +74,7 @@ class PoiEnrichCommand extends Command
         // Create progressbar
         $pbar = new ProgressBar($output, count($poi));
         $pbar->start();
-        $processed = 0;
+        $processed = $errors = 0;
 
         /** @var Poi $p */
         foreach ($poi as $p) {
@@ -96,6 +96,7 @@ class PoiEnrichCommand extends Command
                     return Command::FAILURE;
                 }
 
+                $errors++;
                 $pbar->display();
                 $pbar->advance();
                 continue;
@@ -122,10 +123,23 @@ class PoiEnrichCommand extends Command
             }
         }
 
-        $this->em->flush();
+        if ($force) {
+            $this->em->flush();
+        }
 
         $pbar->finish();
         $io->newLine(2);
+
+        if ($force) {
+            $io->write("<info>".$processed." POIs</info> processed");
+            if ($errors) {
+                $io->write(", <error>".$errors." errors</error>");
+            }
+            $io->newLine();
+        } else {
+            $io->comment($processed." POIs processed, nothing changed in the DB.");
+            $io->note("Use --force to save data to DB.");
+        }
 
         return Command::SUCCESS;
     }
