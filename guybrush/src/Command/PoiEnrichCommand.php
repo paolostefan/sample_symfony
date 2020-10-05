@@ -59,7 +59,6 @@ class PoiEnrichCommand extends Command
 
         if ($input->getOption('info')) {
             $io->writeln('Total number of POIs to enrich: <info>'.count($poi).'</info>');
-
             return Command::SUCCESS;
         }
 
@@ -96,19 +95,8 @@ class PoiEnrichCommand extends Command
 
             $pbar->advance();
 
-            /**
-             * https://developer.mapquest.com/documentation/geocoding-api/reverse/get/
-             */
             if ($force) {
-                $result = $output['results'][0]['locations'][0];
-                $p
-                  ->setAddress($result['street'])
-                  ->setCity($result['adminArea5'])
-                  ->setCountry($result['adminArea1'])
-                  ->setProvince($result['adminArea3'] ?? '-')
-                  ->setRegion($result['adminArea3'] ?? '-')
-                  ->setZip($result['postalCode']);
-                $this->em->persist($p);
+                $this->geocode->enrich($p);
                 if (!$processed % 50) {
                     $this->em->flush();
                 }
