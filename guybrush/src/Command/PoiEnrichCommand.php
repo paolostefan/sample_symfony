@@ -14,11 +14,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PoiEnrichCommand extends Command
 {
     const DEFAULT_LIMIT = 10;
-    protected static $defaultName = 'poi:enrich';
+    const API_KEY = '{la vostra API key}';
+    const TPL_URL = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
 
-    private $em;
-    private $apiKey = '{la vostra API key}';
-    private $baseUrl = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&location=%f,%f';
+    protected static $defaultName = 'poi:enrich';
+    private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em, string $name = null)
     {
@@ -38,7 +38,7 @@ class PoiEnrichCommand extends Command
 
     private function mapQuestGeocode(Poi $p)
     {
-        $url = sprintf($this->baseUrl, $this->apiKey, $p->getLat(), $p->getLon());
+        $url = sprintf(self::TPL_URL, self::API_KEY, $p->getLat(), $p->getLon());
         $res = curl_init($url);
         curl_setopt($res, CURLOPT_RETURNTRANSFER, true);
         $output = json_decode(curl_exec($res), JSON_OBJECT_AS_ARRAY);
