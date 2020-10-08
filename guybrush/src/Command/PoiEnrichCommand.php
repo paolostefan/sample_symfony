@@ -43,7 +43,7 @@ class PoiEnrichCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = $input->getOption('limit');
-        $stoponerror = $input->getOption('stoponerror');
+        $stopOnError = $input->getOption('stoponerror');
         $force = $input->getOption('force');
 
         if ($input->getOption('info')) {
@@ -55,16 +55,16 @@ class PoiEnrichCommand extends Command
             }
         }
 
-        $poi = $this->em->getRepository(Poi::class)->findBy(['address' => null], ['updatedAt' => 'ASC'], $limit);
+        $poi = $this->em->getRepository(Poi::class)
+          ->findBy(['address' => null], ['updatedAt' => 'ASC'], $limit);
 
         if ($input->getOption('info')) {
             $io->writeln('Total number of POIs to enrich: <info>'.count($poi).'</info>');
             return Command::SUCCESS;
         }
 
-        // Create progressbar
-        $pbar = new ProgressBar($output, count($poi));
-        $pbar->start();
+        $progressBar = new ProgressBar($output, count($poi));
+        $progressBar->start();
         $processed = $errors = 0;
 
         /** @var Poi $p */
@@ -74,26 +74,25 @@ class PoiEnrichCommand extends Command
 
             $output = $this->geocode->callWebservice($p);
 
-//            $io->writeln(print_r($output, true), OutputInterface::VERBOSITY_VERY_VERBOSE);
-
             if (empty($output['results'][0]['locations'][0])) {
-                $pbar->clear();
-                $io->writeln('<error>No results</error> for POI #'.$p->getId()." (".$p->getTitle().")");
+                $progressBar->clear();
+                $io->writeln('<error>No results</error> for POI #'.
+                  $p->getId()." (".$p->getTitle().")");
                 $io->writeln(
                   'API returned '.($output ? print_r($output, true) : 'null'),
                   OutputInterface::VERBOSITY_VERBOSE
                 );
-                if ($stoponerror) {
+                if ($stopOnError) {
                     return Command::FAILURE;
                 }
 
                 $errors++;
-                $pbar->display();
-                $pbar->advance();
+                $progressBar->display();
+                $progressBar->advance();
                 continue;
             }
 
-            $pbar->advance();
+            $progressBar->advance();
 
             if ($force) {
                 $this->geocode->enrich($p);
@@ -107,12 +106,12 @@ class PoiEnrichCommand extends Command
             $this->em->flush();
         }
 
-        $pbar->finish();
+        $progressBar->finish();
         $io->newLine(2);
 
         if ($force) {
             $io->write("<info>".$processed." POIs</info> processed");
-            if($errors) {
+            if ($errors) {
                 $io->write(", <error>".$errors." errors</error>");
             }
             $io->newLine();
