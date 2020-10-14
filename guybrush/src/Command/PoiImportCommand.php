@@ -99,8 +99,8 @@ class PoiImportCommand extends Command
         while (!feof($file)) {
             $row++;
             try {
-                $csvRow = fgetcsv($file);
-                list($lat, $lon, $title) = $csvRow;
+                // !Importante! L'ordine delle colonne va verificato nel file di origine
+                list($lon, $lat, $title) = fgetcsv($file);
                 $poi = new Poi();
                 // SRID=4326;POINT({LON} {LAT})
                 $poi
