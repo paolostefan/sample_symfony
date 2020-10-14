@@ -19,6 +19,23 @@ class PoiRepository extends ServiceEntityRepository
         parent::__construct($registry, Poi::class);
     }
 
+    public function search(string $searchQuery, $limit=25)
+    {
+        $qb = $this->createQueryBuilder('p');
+        return $qb
+          ->where($qb->expr()->like('p.title', ':val'))
+          ->orWhere($qb->expr()->like('p.address', ':val'))
+          ->orWhere($qb->expr()->like('p.city', ':val'))
+          ->orWhere($qb->expr()->like('p.province', ':val'))
+          ->orWhere($qb->expr()->like('p.region', ':val'))
+          ->setParameter('val', '%'.$searchQuery.'%')
+          ->setMaxResults($limit)
+          ->getQuery()
+          ->getResult()
+          ;
+
+    }
+    
     // /**
     //  * @return Poi[] Returns an array of Poi objects
     //  */
