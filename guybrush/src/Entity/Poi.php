@@ -6,11 +6,12 @@ use DateTimeInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\PoiRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=PoiRepository::class)
  */
-class Poi
+class Poi implements JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -260,5 +261,20 @@ class Poi
     {
         $this->parseCoords();
         return $this->srid;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'lat'=>$this->getLat(),
+          'lon'=>$this->getLon(),
+          'title'=>$this->title,
+          'address'=>$this->address,
+          'city'=>$this->city,
+          'zip'=>$this->zip,
+          'province'=>$this->province,
+          'region'=>$this->region,
+          'country'=>$this->country,
+        ];
     }
 }
