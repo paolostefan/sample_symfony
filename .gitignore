@@ -1,5 +1,7 @@
 .idea/
 .vagrant/
+/guybrush/.env.local
+/guybrush/migrations
 /guybrush/var/cache
 /guybrush/var/log
 /guybrush/vendor
