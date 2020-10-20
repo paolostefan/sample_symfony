@@ -45,6 +45,18 @@ services:
       POSTGRES_DB: guybrush
       POSTGRES_USER: guybrush_usr
       POSTGRES_PASSWORD: Pa55w0rD
+    
+  nginx_template:
+    image: nginx
+    container_name: nginx_template
+    ports:
+      - "8081:80"
+    volumes:
+      - type: bind
+        source: ../html_template
+        target: /usr/share/nginx/html
+        consistency: cached
+        read_only: true   
 
 volumes:
   guybrush_var:

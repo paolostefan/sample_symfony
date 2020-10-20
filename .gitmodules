@@ -1,0 +1,3 @@
+[submodule "html_template"]
+	path = html_template
+	url = git@github.com:gurayyarar/AdminBSBMaterialDesign.git
