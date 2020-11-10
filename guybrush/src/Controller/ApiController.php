@@ -21,6 +21,7 @@ class ApiController extends AbstractController
     public function poiSearch(Request $request)
     {
         $results = $this->getDoctrine()->getRepository(Poi::class)->search($request->get('q'));
-        return new JsonResponse($results);
+
+        return new JsonResponse(['results' => $results]);
     }
 }

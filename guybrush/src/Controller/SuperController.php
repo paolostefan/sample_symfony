@@ -27,4 +27,12 @@ class SuperController extends AbstractController
     {
         return $this->render('map_empty.html.twig');
     }
+
+    /**
+     * @Route("/map", name="map")
+     */
+    public function mapAction()
+    {
+        return $this->render('map_search.html.twig');
+    }
 }
