@@ -32,10 +32,30 @@ class PoiEnrichCommand extends Command
     {
         $this
           ->setDescription('Reverse-geocode the POIs missing their address.')
-          ->addOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Maximum no. of POIs to enrich')
-          ->addOption('info', 'i', InputOption::VALUE_NONE, 'Just print the number of POI to enrich, and exit.')
-          ->addOption('stoponerror', 's', InputOption::VALUE_NONE, 'Stop at first error')
-          ->addOption('force', 'f', InputOption::VALUE_NONE, 'Actually write data to DB');
+          ->addOption(
+            'limit',
+            'l',
+            InputOption::VALUE_REQUIRED,
+            'Maximum no. of POIs to enrich'
+          )
+          ->addOption(
+            'info',
+            'i',
+            InputOption::VALUE_NONE,
+            'Just print the number of POI to enrich, and exit.'
+          )
+          ->addOption(
+            'stoponerror',
+            's',
+            InputOption::VALUE_NONE,
+            'Stop at first error'
+          )
+          ->addOption(
+            'force',
+            'f',
+            InputOption::VALUE_NONE,
+            'Actually write data to DB'
+          );
     }
 
 
@@ -50,8 +70,8 @@ class PoiEnrichCommand extends Command
             $limit = null;
         } else {
             if ($limit <= 0) {
-                $io->comment('Automatically limiting the number of records to '.self::DEFAULT_LIMIT);
                 $limit = self::DEFAULT_LIMIT;
+                $io->comment('Automatically limiting the number of records to '.$limit);
             }
         }
 
@@ -60,6 +80,7 @@ class PoiEnrichCommand extends Command
 
         if ($input->getOption('info')) {
             $io->writeln('Total number of POIs to enrich: <info>'.count($poi).'</info>');
+
             return Command::SUCCESS;
         }
 
@@ -76,8 +97,10 @@ class PoiEnrichCommand extends Command
 
             if (empty($output['results'][0]['locations'][0])) {
                 $progressBar->clear();
-                $io->writeln('<error>No results</error> for POI #'.
-                  $p->getId()." (".$p->getTitle().")");
+                $io->writeln(
+                  '<error>No results</error> for POI #'.
+                  $p->getId()." (".$p->getTitle().")"
+                );
                 $io->writeln(
                   'API returned '.($output ? print_r($output, true) : 'null'),
                   OutputInterface::VERBOSITY_VERBOSE
