@@ -1,4 +1,6 @@
-FROM php:7.4-fpm-buster
+FROM php:8.0.0-fpm-buster
+
+ENV PACKAGES g++ iproute2 iputils-ping libicu-dev libpq-dev libzip-dev unzip wget zlib1g-dev
 
 ENV PHP_EXTENSIONS \
     intl \
@@ -8,15 +10,14 @@ ENV PHP_EXTENSIONS \
     pgsql \
     zip
 
-ENV PECL_EXTENSIONS xdebug
-
-ENV PACKAGES g++ iproute2 iputils-ping libicu-dev libpq-dev libzip-dev unzip wget zlib1g-dev
 
 RUN apt-get update && apt-get install -y ${PACKAGES} \
   && docker-php-ext-configure intl \
   && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
   && docker-php-ext-configure zip \
   && docker-php-ext-install ${PHP_EXTENSIONS}
+
+ENV PECL_EXTENSIONS xdebug
 
 RUN pecl install ${PECL_EXTENSIONS}
 

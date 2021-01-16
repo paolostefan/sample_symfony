@@ -1,0 +1,71 @@
+version: "3.4"
+services:
+  postgres:
+    image: postgis/postgis
+    container_name: guybrush_pgsql
+    ports:
+      - "54320:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: guybrush
+      POSTGRES_USER: guybrush_usr
+      POSTGRES_PASSWORD: Pa55w0rD
+
+  php8:
+    build:
+      context: ./docker/php-fpm
+    container_name: guybrush_php8
+    depends_on:
+      - postgres
+    volumes:
+      - type: bind
+        source: ./guybrush
+        target: /var/www/html/guybrush
+        consistency: cached
+      - guybrush_var:/var/www/html/guybrush/var
+      - ./docker/php-fpm/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./docker/php-fpm/etc/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php-fpm/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    # Da Docker 20 in poi...
+    # extra_hosts:
+    #   - "host.docker.internal:gateway"
+    environment:
+      - PHP_IDE_CONFIG=serverName=guybrush-docker
+
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: guybrush_nginx
+    depends_on:
+      - php8
+    environment:
+      DISABLE_IPV6: "true"
+    ports:
+      - "8080:80"
+    volumes:
+      - type: bind
+        source: ./guybrush
+        target: /usr/share/nginx/html/guybrush
+        consistency: cached
+        read_only: true
+      - guybrush_var:/usr/share/nginx/html/guybrush/var
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+
+  nginx_template:
+    image: nginx
+    container_name: guybrush_nginx_template
+    environment:
+      DISABLE_IPV6: "true"
+    ports:
+      - "8081:80"
+    volumes:
+      - type: bind
+        source: ./html_template
+        target: /usr/share/nginx/html
+        consistency: cached
+        read_only: true
+
+volumes:
+  guybrush_var:
+  pgdata:
