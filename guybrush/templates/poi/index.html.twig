@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Poi index{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/dataTables.bootstrap.min.css">
+{% endblock %}
+
+{% block javascripts %}
+  <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.23/js/dataTables.bootstrap.min.js"></script>
+  <script>
+    $(function () {
+      const table = $('#poi_table').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'ajax': '/api/v1/poi/page',
+        'columns': [
+          {'data': 'id'},
+          {'data': 'title'},
+          {'data': 'city'},
+          {'data': 'address'},
+          {'data': 'zip'},
+          {'data': 'province'},
+          {'data': 'region'},
+          {'data': 'country'},
+          {
+            'data': null,
+            'orderable': false,
+            'width': '90px',
+            'defaultContent': '<a ' +
+                '   class="show_button btn bg-light-green btn-circle waves-effect waves-circle waves-float">' +
+                '    <i class="material-icons">search</i>' +
+                '  </a> ' +
+                '<a class="edit_button btn bg-amber btn-circle waves-effect waves-circle waves-float">' +
+                '    <i class="material-icons">mode_edit</i>' +
+                '</a>'
+          }
+        ]
+      });
+
+      $('#poi_table tbody').on('click', 'a.show_button', function () {
+        const data = table.row($(this).parents('tr')).data();
+        document.location.href = '/poi/' + data.id;
+      });
+      $('#poi_table tbody').on('click', 'a.edit_button', function () {
+        const data = table.row($(this).parents('tr')).data();
+        document.location.href = '/poi/' + data.id + '/edit';
+      });
+
+    });
+  </script>
+{% endblock javascripts %}
+
+{% block body %}
+  <div class="row clearfix">
+    <div class="col-xs-12">
+      <div class="card">
+        <div class="header">
+          <h2>POI list</h2>
+        </div>
+        <div class="body table-responsive">
+
+          <table class="table table-striped" id="poi_table">
+            <thead>
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>City</th>
+              <th>Address</th>
+              <th>Zip</th>
+              <th>Province</th>
+              <th>Region</th>
+              <th>Country</th>
+              <th class="text-right" style="width: 115px">actions</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>City</th>
+              <th>Address</th>
+              <th>Zip</th>
+              <th>Province</th>
+              <th>Region</th>
+              <th>Country</th>
+              <th class="text-right" style="width: 115px">actions</th>
+            </tr>
+            </tfoot>
+          </table>
+
+          <a class="btn bg-green" href="{{ path('poi_new') }}">Create new</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

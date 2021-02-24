@@ -10,9 +10,6 @@ class Geocode
 {
     private string $apiKey;
     private string $urlTemplate;
-    /**
-     * @var mixed
-     */
     private ? array $output;
 
     public function __construct(string $apiKey, string $urlTemplate)
@@ -23,9 +20,9 @@ class Geocode
 
     /**
      * @param Poi $p
-     * @return array
+     * @return array|null
      */
-    public function callWebservice(Poi $p)
+    public function callWebservice(Poi $p): ?array
     {
         $url = sprintf($this->urlTemplate, $this->apiKey, $p->getLat(), $p->getLon());
         $res = curl_init($url);
@@ -36,6 +33,9 @@ class Geocode
         return $this->output;
     }
 
+    /**
+     * @param Poi $p
+     */
     public function enrich(Poi $p)
     {
         $result = $this->output['results'][0]['locations'][0];
@@ -43,7 +43,9 @@ class Geocode
           ->setAddress($result['street'])
           ->setCity($result['adminArea5'])
           ->setCountry($result['adminArea1'])
-          ->setProvince($result['adminArea3'] ?? '-')
+          // La provincia non viene restituita correttamente, sembra sia sempre vuota
+          // adminArea4Type è "County", contea... non provincia
+          ->setProvince($result['adminArea4'] ?? '-')
           ->setRegion($result['adminArea3'] ?? '-')
           ->setZip($result['postalCode']);
     }

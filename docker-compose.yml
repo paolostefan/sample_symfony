@@ -14,7 +14,7 @@ services:
 
   php8:
     build:
-      context: ./docker/php-fpm
+      context: ./docker/php
     container_name: guybrush_php8
     depends_on:
       - postgres
@@ -24,9 +24,9 @@ services:
         target: /var/www/html/guybrush
         consistency: cached
       - guybrush_var:/var/www/html/guybrush/var
-      - ./docker/php-fpm/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./docker/php-fpm/etc/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php-fpm/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./docker/php/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./docker/php/etc/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
     # Da Docker 20 in poi...
     # extra_hosts:
     #   - "host.docker.internal:gateway"

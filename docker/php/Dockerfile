@@ -26,7 +26,7 @@ RUN apt autoremove -y
 RUN rm -rf /var/cache/apt/*
 
 # Composer
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 # Unprivileged user
 RUN groupadd --gid 1000 developer && useradd -d /home/developer -ms /bin/bash -u 1000 -g 1000 developer

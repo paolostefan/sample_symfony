@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Poi;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Poi|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,9 +22,10 @@ class PoiRepository extends ServiceEntityRepository
         parent::__construct($registry, Poi::class);
     }
 
-    public function search(string $searchQuery, $limit=25)
+    public function search(string $searchQuery, $limit = 25)
     {
         $qb = $this->createQueryBuilder('p');
+
         return $qb
           ->where($qb->expr()->like('p.title', ':val'))
           ->orWhere($qb->expr()->like('p.address', ':val'))
@@ -31,11 +35,10 @@ class PoiRepository extends ServiceEntityRepository
           ->setParameter('val', '%'.$searchQuery.'%')
           ->setMaxResults($limit)
           ->getQuery()
-          ->getResult()
-          ;
+          ->getResult();
 
     }
-    
+
     // /**
     //  * @return Poi[] Returns an array of Poi objects
     //  */
@@ -64,5 +67,39 @@ class PoiRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws NonUniqueResultException|NoResultException
+     */
+    public function getDataTablesPage(Request $request): array
+    {
+        $start = $request->get("start", 0);
+        $limit = $request->get("length", 10);
+        $qb = $this->createQueryBuilder('p');
+        $data = $qb
+          ->select(
+            [
+              'p.id',
+              'p.title',
+              'p.city',
+              'p.address',
+              'p.zip',
+              'p.province',
+              'p.region',
+              'p.country',
+            ]
+          )
+          ->setFirstResult($start)
+          ->setMaxResults($limit)
+          ->getQuery()
+          ->getArrayResult();
+        $qb_count = $this->createQueryBuilder('p');
+        $total = $qb_count->select(['count(p)'])->getQuery()->getSingleScalarResult();
+
+        return [$data, $total, $total];
+    }
 
 }

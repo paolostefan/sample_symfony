@@ -84,6 +84,11 @@ class PoiEnrichCommand extends Command
             return Command::SUCCESS;
         }
 
+        if(!$poi){
+            $io->warning("No Poi to enrich");
+            return Command::FAILURE;
+        }
+
         $progressBar = new ProgressBar($output, count($poi));
         $progressBar->start();
         $processed = $errors = 0;
@@ -115,14 +120,13 @@ class PoiEnrichCommand extends Command
                 continue;
             }
 
-            $progressBar->advance();
-
             if ($force) {
                 $this->geocode->enrich($p);
                 if (!$processed % 50) {
                     $this->em->flush();
                 }
             }
+            $progressBar->advance();
         }
 
         if ($force) {

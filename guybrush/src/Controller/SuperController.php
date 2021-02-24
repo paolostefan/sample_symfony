@@ -29,7 +29,7 @@ class SuperController extends AbstractController
     }
 
     /**
-     * @Route("/map", name="map")
+     * @Route("/map", name="map_search")
      */
     public function mapAction()
     {
