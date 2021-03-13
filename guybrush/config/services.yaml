@@ -33,4 +33,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\Geocode:
+        public: true
+        arguments:
+            $apiKey: '%env(MAPQUEST_API_KEY)%'
+            $urlTemplate: 'http://www.mapquestapi.com/geocoding/v1/reverse?key=%%s&location=%%f,%%f'
 

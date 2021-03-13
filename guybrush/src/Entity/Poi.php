@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\PoiRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -212,12 +213,12 @@ class Poi
 
         return $this;
     }
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
