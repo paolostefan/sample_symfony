@@ -4,14 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Poi;
 use App\Form\PoiType;
-use App\Repository\PoiRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/poi")
+ * @Route("/admin/poi")
  */
 class PoiController extends AbstractController
 {

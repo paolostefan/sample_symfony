@@ -39,13 +39,14 @@
         ]
       });
 
-      $('#poi_table tbody').on('click', 'a.show_button', function () {
+      const tbody = $('#poi_table tbody');
+      tbody.on('click', 'a.show_button', function () {
         const data = table.row($(this).parents('tr')).data();
-        document.location.href = '/poi/' + data.id;
+        document.location.href = '/admin/poi/' + data.id;
       });
-      $('#poi_table tbody').on('click', 'a.edit_button', function () {
+      tbody.on('click', 'a.edit_button', function () {
         const data = table.row($(this).parents('tr')).data();
-        document.location.href = '/poi/' + data.id + '/edit';
+        document.location.href = '/admin/poi/' + data.id + '/edit';
       });
 
     });
