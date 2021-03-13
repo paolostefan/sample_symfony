@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Poi{% endblock %}
+
+{% block body %}
+    <h1>Poi</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ poi.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ poi.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ poi.description }}</td>
+            </tr>
+            <tr>
+                <th>Coords</th>
+                <td>{{ poi.coords }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ poi.city }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ poi.address }}</td>
+            </tr>
+            <tr>
+                <th>Zip</th>
+                <td>{{ poi.zip }}</td>
+            </tr>
+            <tr>
+                <th>Province</th>
+                <td>{{ poi.province }}</td>
+            </tr>
+            <tr>
+                <th>Region</th>
+                <td>{{ poi.region }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ poi.country }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ poi.updatedAt ? poi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('poi_index') }}">back to list</a>
+
+    <a href="{{ path('poi_edit', {'id': poi.id}) }}">edit</a>
+
+    {{ include('poi/_delete_form.html.twig') }}
+{% endblock %}

@@ -24,7 +24,7 @@
         "version": "1.6.7"
     },
     "doctrine/common": {
-        "version": "2.13.3"
+        "version": "3.1.1"
     },
     "doctrine/dbal": {
         "version": "2.10.2"
@@ -35,7 +35,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "2.0",
-            "ref": "a9f2463b9f73efe74482f831f03a204a41328555"
+            "ref": "368794356c1fb634e58b38ad2addb36933f2e73e"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -64,22 +64,19 @@
         "version": "1.4.3"
     },
     "doctrine/instantiator": {
-        "version": "1.3.1"
+        "version": "1.4.0"
     },
     "doctrine/lexer": {
         "version": "1.2.1"
     },
     "doctrine/migrations": {
-        "version": "3.0.1"
+        "version": "3.0.2"
     },
     "doctrine/orm": {
-        "version": "v2.7.3"
+        "version": "2.8.1"
     },
     "doctrine/persistence": {
-        "version": "1.3.8"
-    },
-    "doctrine/reflection": {
-        "version": "1.2.1"
+        "version": "2.1.0"
     },
     "doctrine/sql-formatter": {
         "version": "1.1.1"
@@ -87,8 +84,11 @@
     "egulias/email-validator": {
         "version": "2.1.18"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
     "gedmo/doctrine-extensions": {
-        "version": "v2.4.42"
+        "version": "v3.0.0"
     },
     "jsor/doctrine-postgis": {
         "version": "1.7",
@@ -103,7 +103,7 @@
         ]
     },
     "laminas/laminas-code": {
-        "version": "3.4.1"
+        "version": "4.0.0"
     },
     "laminas/laminas-eventmanager": {
         "version": "3.3.0"
@@ -121,7 +121,7 @@
         "version": "2.8.0"
     },
     "php": {
-        "version": "7.4"
+        "version": "8.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -223,7 +223,7 @@
         "version": "v2.1.3"
     },
     "symfony/doctrine-bridge": {
-        "version": "v5.1.6"
+        "version": "v5.2.1"
     },
     "symfony/dom-crawler": {
         "version": "v5.1.3"
@@ -542,9 +542,6 @@
     },
     "twig/twig": {
         "version": "v3.0.4"
-    },
-    "webimpress/safe-writer": {
-        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.9.1"
