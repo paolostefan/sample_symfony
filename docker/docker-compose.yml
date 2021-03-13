@@ -7,20 +7,18 @@ services:
     container_name: php_fpm
     depends_on:
       - postgres
+    # ports:
+    #   - 9000:9000
     volumes:
       - type: bind
         source: ../guybrush
         target: /var/www/html/guybrush
         consistency: cached
+        read_only: true
       - guybrush_var:/var/www/html/guybrush/var
-      - ./php-fpm/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./php-fpm/etc/php/php.ini:/usr/local/etc/php/php.ini
-      - ./php-fpm/etc/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-    # Da Docker 20 in poi...
-    # extra_hosts:
-    #   - "host.docker.internal:gateway"
-    environment: 
-      - PHP_IDE_CONFIG=serverName=guybrush-docker
+      - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      # - ./php-fpm/etc/php.ini:/usr/local/etc/php/php.ini
+
   nginx:
     build:
       context: ./nginx
@@ -41,8 +39,6 @@ services:
   postgres:
     image: postgis/postgis
     container_name: postgres
-    ports:
-      - "54320:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
