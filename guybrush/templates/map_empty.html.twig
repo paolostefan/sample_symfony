@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="/plugins/leaflet/leaflet.css"/>
+{% endblock %}
+
+{% block body %}
+  <div class="row clearfix">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="header">
+          <h2>Leaflet map example</h2>
+        </div>
+        <div class="body">
+          <div id="leafletMap" style="height:60vh;z-index:0;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="/plugins/leaflet/leaflet.js"></script>
+  <script>
+    // Map
+    const eMap = L.map('leafletMap', {
+      center: [44.1, 12.2],
+      zoom: 10,
+      scrollWheelZoom: false
+    });
+    // Tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(eMap);
+
+    const markers = [];
+    for (let x = 11.9; x < 12.46; x += .06) {
+      for (let y = 44.0; y < 44.28; y += .08) {
+        markers.push(L.marker([y, x]).bindPopup("Ho coordinate (" + y + "," + x + ")"));
+      }
+    }
+
+    const mg = L.layerGroup(markers);
+    mg.addTo(eMap);
+  </script>
+{% endblock %}
