@@ -14,19 +14,19 @@ services:
 
   php8:
     build:
-      context: ./docker/php
+      context: ./php
     container_name: guybrush_php8
     depends_on:
       - postgres
     volumes:
       - type: bind
-        source: ./guybrush
+        source: ../guybrush
         target: /var/www/html/guybrush
         consistency: cached
       - guybrush_var:/var/www/html/guybrush/var
-      - ./docker/php/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./docker/php/etc/php/php.ini:/usr/local/etc/php/php.ini
-      - ./docker/php/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./php/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./php/etc/php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
     # Da Docker 20 in poi...
     # extra_hosts:
     #   - "host.docker.internal:gateway"
@@ -35,7 +35,7 @@ services:
 
   nginx:
     build:
-      context: ./docker/nginx
+      context: ./nginx
     container_name: guybrush_nginx
     depends_on:
       - php8
@@ -45,12 +45,12 @@ services:
       - "8080:80"
     volumes:
       - type: bind
-        source: ./guybrush
+        source: ../guybrush
         target: /usr/share/nginx/html/guybrush
         consistency: cached
         read_only: true
       - guybrush_var:/usr/share/nginx/html/guybrush/var
-      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
   nginx_template:
     image: nginx
@@ -61,7 +61,7 @@ services:
       - "8081:80"
     volumes:
       - type: bind
-        source: ./html_template
+        source: ../html_template
         target: /usr/share/nginx/html
         consistency: cached
         read_only: true
