@@ -18,9 +18,15 @@ security:
             security: false
         main:
             anonymous: ~
-            http_basic: ~
+            form_login:
+                login_path: login
+                check_path: login
             lazy: true
             provider: users_in_memory
+            logout:
+                path: /logout
+                # Il target di default è "/"
+#                target: /
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
