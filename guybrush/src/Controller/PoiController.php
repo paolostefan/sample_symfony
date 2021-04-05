@@ -24,6 +24,8 @@ class PoiController extends AbstractController
 
     /**
      * @Route("/new", name="poi_new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -50,6 +52,8 @@ class PoiController extends AbstractController
 
     /**
      * @Route("/{id}", name="poi_show", methods={"GET"})
+     * @param Poi $poi
+     * @return Response
      */
     public function show(Poi $poi): Response
     {
@@ -63,6 +67,9 @@ class PoiController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="poi_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Poi $poi
+     * @return Response
      */
     public function edit(Request $request, Poi $poi): Response
     {
@@ -86,6 +93,9 @@ class PoiController extends AbstractController
 
     /**
      * @Route("/{id}", name="poi_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Poi $poi
+     * @return Response
      */
     public function delete(Request $request, Poi $poi): Response
     {
