@@ -24,7 +24,7 @@ services:
         target: /var/www/html/guybrush
         consistency: cached
       - guybrush_var:/var/www/html/guybrush/var
-      - ./php/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+#      - ./php/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php/etc/php/php.ini:/usr/local/etc/php/php.ini
       - ./php/etc/php/conf.d/xdebug3-php8.ini:/usr/local/etc/php/conf.d/xdebug.ini
     # Da Docker 20 in poi...
