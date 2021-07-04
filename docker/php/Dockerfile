@@ -3,12 +3,12 @@ FROM php:8.0.0-fpm-buster
 ENV PACKAGES g++ iproute2 iputils-ping libicu-dev libpq-dev libzip-dev unzip wget zlib1g-dev
 
 ENV PHP_EXTENSIONS \
-    intl \
-    opcache \
-    pdo \
-    pdo_pgsql \
-    pgsql \
-    zip
+  intl \
+  opcache \
+  pdo \
+  pdo_pgsql \
+  pgsql \
+  zip
 
 
 RUN apt-get update && apt-get install -y ${PACKAGES} \
@@ -33,6 +33,10 @@ RUN groupadd --gid 1000 developer && useradd -d /home/developer -ms /bin/bash -u
 
 # Symfony project dirs
 RUN mkdir -p /var/www/html/guybrush/ && chown -R developer: /var/www/html/guybrush/
+
+# Make symfony logdir world writable
+RUN mkdir -p /var/www/html/guybrush/var/log && chown -R developer: /var/www/html/guybrush/var/log && chmod a+w /var/www/html/guybrush/var/log
+
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
