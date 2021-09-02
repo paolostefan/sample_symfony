@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SuperController extends AbstractController
 {
-    /**
-     * @Route("/super", name="super")
-     */
+    #[Route("/super", name:"super")]
     public function index(): Response
     {
         return $this->render(
@@ -21,25 +19,19 @@ class SuperController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/map/empty", name="map_empty")
-     */
+    #[Route("/map/empty", name:"map_empty")]
     public function mapEmpty(): Response
     {
         return $this->render('map_empty.html.twig');
     }
 
-    /**
-     * @Route("/map", name="map_search")
-     */
+    #[Route("/map", name:"map_search")]
     public function mapAction(): Response
     {
         return $this->render('map_search.html.twig');
     }
 
-    /**
-     * @Route("/login", name="login")
-     */
+    #[Route("/login", name:"login")]
     public function login(): Response
     {
         return $this->render('login.html.twig');
